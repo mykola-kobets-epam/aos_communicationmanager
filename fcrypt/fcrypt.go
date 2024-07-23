@@ -27,6 +27,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/asn1"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"io"
@@ -251,7 +252,12 @@ func (handler *CryptoHandler) DecryptAndValidate(
 
 // DecryptMetadata decrypt envelope.
 func (handler *CryptoHandler) DecryptMetadata(input []byte) (output []byte, err error) {
-	ci, err := unmarshallCMS(input)
+	rawMessage, err := base64.StdEncoding.DecodeString(string(input))
+	if err != nil {
+		return nil, aoserrors.Wrap(err)
+	}
+
+	ci, err := unmarshallCMS(rawMessage)
 	if err != nil {
 		return nil, aoserrors.Wrap(err)
 	}
