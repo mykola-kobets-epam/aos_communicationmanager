@@ -343,10 +343,13 @@ func (handler *smHandler) getInstanceCrashLog(logRequest cloudprotocol.RequestLo
 }
 
 func (handler *smHandler) overrideEnvVars(envVars cloudprotocol.OverrideEnvVars) (err error) {
+	jsonEnvVars, _ := json.Marshal(envVars)
+
 	log.WithFields(log.Fields{
 		"nodeID":   handler.nodeID,
 		"nodeType": handler.nodeType,
-	}).Debug("Override env vars SM ")
+		"envVars":  string(jsonEnvVars),
+	}).Debug("Override env vars SM")
 
 	request := &pb.OverrideEnvVars{EnvVars: make([]*pb.OverrideInstanceEnvVar, len(envVars.Items))}
 

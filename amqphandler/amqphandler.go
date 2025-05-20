@@ -675,6 +675,8 @@ func (handler *AmqpHandler) unmarshalReceiveData(data []byte) (Message, error) {
 		Type string `json:"messageType"`
 	}
 
+	log.WithField("data", string(data)).Debug("unmarshalReceiveData")
+
 	if err := json.Unmarshal(data, &messageType); err != nil {
 		return nil, aoserrors.Wrap(err)
 	}
